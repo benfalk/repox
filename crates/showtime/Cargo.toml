@@ -1,0 +1,18 @@
+[package]
+name = "showtime"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+repox = { path = "../repox" }
+thiserror.workspace = true
+anyhow.workspace = true
+sqlx = { workspace = true, features = ["sqlite", "runtime-tokio"] }
+derive_more = { workspace = true, features = ["full"] }
+tokio = { workspace = true, features = ["full"] }
+bon = { workspace = true }
+
+[dev-dependencies]
+mockall = { workspace = true }
+rstest = { workspace = true }
+googletest = { workspace = true }

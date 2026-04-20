@@ -1,0 +1,10 @@
+[book]
+title = "RepoX Documentation"
+description = "Read The Friendly Manual"
+src = "."
+
+[output.html]
+default-theme = "rust"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/benfalk/repox"
+edit-url-template = "https://github.com/benfalk/repox/edit/main/{path}"

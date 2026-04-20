@@ -1,0 +1,20 @@
+[workspace]
+resolver = "3"
+members = ["crates/showtime", "crates/repox", "crates/repox_derive"]
+
+[workspace.dependencies]
+anyhow = "1.0"
+bon = "3.9"
+clap = "4.6"
+dashmap = "6.1"
+derive_more = "2.1"
+googletest = "0.14"
+mockall = "0.14"
+pollster = "0.4"
+proc-macro2 = "1.0"
+quote = "1.0"
+rstest = "0.26"
+sqlx = "0.8"
+syn = "2.0"
+thiserror = "2.0"
+tokio = "1.51"

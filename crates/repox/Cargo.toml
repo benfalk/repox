@@ -1,0 +1,11 @@
+[package]
+name = "repox"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+thiserror.workspace = true
+anyhow.workspace = true
+dashmap.workspace = true
+pollster.workspace = true
+repox_derive = { path = "../repox_derive", version = "0.1.0" }
