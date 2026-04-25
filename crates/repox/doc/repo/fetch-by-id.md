@@ -76,3 +76,34 @@
 > > // Tight! 🕺
 > > # });
 > > ```
+>
+> 🧪 *Mock Example:*
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait WidgetFetcher: Repo + repox::FetchById<Widget> {}
+> >
+> > let mut repo = MockWidgetFetcher::new();
+> > repo.expect_fetch_by_id::<Widget>()
+> >     .withf(|id| *id == 42)
+> >     .returning(repox::mock::ok_with(|id: u32| Widget {
+> >         id,
+> >         name: "TableRocker".into(),
+> >     }));
+> >
+> > # pollster::block_on(async {
+> > let widget = repo.fetch_by_id::<Widget>(42).await.unwrap();
+> > assert_eq!(widget.id, 42);
+> > assert_eq!(widget.name, "TableRocker");
+> > # });
+> >
+> > // I'd buy that for a dollar! 💵
+> > ```

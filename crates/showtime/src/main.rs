@@ -5,6 +5,7 @@ pub mod types;
 mod repo {
     use super::schema::*;
 
+    #[cfg_attr(test, ::repox::mockall)]
     pub trait Repo:
         repox::Repo
 
@@ -101,4 +102,79 @@ async fn main() -> anyhow::Result<()> {
     println!("Doing the stuff...");
     do_stuff(&sqlite).await?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use repox::mock::{ok_val, ok_with};
+
+    use schema::*;
+    #[tokio::test]
+    async fn test_mock_shows() -> anyhow::Result<()> {
+        let mut repo = repo::MockRepo::new();
+
+        repo.expect_create_with()
+            .returning(ok_with(|params: show::ShowParams| show::Show {
+                id: show::ShowID::try_from(1).unwrap(),
+                title: params.title,
+                year_released: params.year_released,
+                year_ended: params.year_ended,
+            }));
+
+        repo.expect_create_with().returning(ok_with(
+            |params: actor::ActorParams| actor::Actor {
+                id: actor::ActorID::try_from(1).unwrap(),
+                first_name: params.first_name,
+                last_name: params.last_name,
+            },
+        ));
+
+        repo.expect_create_with().returning(ok_with(
+            |params: character::CharacterParams| character::Character {
+                id: character::CharacterID::try_from(1).unwrap(),
+                title: params.title,
+                show_id: params.show_id,
+            },
+        ));
+
+        repo.expect_create_with()
+            .returning(ok_with(|params: role::RoleParams| role::Role {
+                actor_id: params.actor_id,
+                character_id: params.character_id,
+                show_id: show::ShowID::try_from(1).unwrap(),
+            }));
+
+        repo.expect_fetch_with_children_by_id()
+            .once()
+            .returning(ok_val((
+                actor::Actor {
+                    id: actor::ActorID::try_from(1).unwrap(),
+                    first_name: "Ted".into(),
+                    last_name: "Danson".into(),
+                },
+                vec![role::Role {
+                    actor_id: actor::ActorID::try_from(1).unwrap(),
+                    character_id: character::CharacterID::try_from(1).unwrap(),
+                    show_id: show::ShowID::try_from(1).unwrap(),
+                }],
+            )));
+
+        repo.expect_delete_by_id::<role::Role>()
+            .returning(ok_val(repox::DeleteStatus::Deleted));
+
+        repo.expect_fetch_with_children_by_id()
+            .once()
+            .returning(ok_val((
+                actor::Actor {
+                    id: actor::ActorID::try_from(1).unwrap(),
+                    first_name: "Ted".into(),
+                    last_name: "Danson".into(),
+                },
+                vec![],
+            )));
+
+        do_stuff(&repo).await?;
+        Ok(())
+    }
 }

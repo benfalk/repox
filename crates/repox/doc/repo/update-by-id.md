@@ -7,13 +7,13 @@
 > > ```
 > >
 > > This method allows you to update an existing entity in the repository
-> > using the exact structure of the entity itself.  The data store will
+> > using the exact structure of the entity itself. The data store will
 > > use the unique identifier of the entity to find the existing record and
 > > update it with the new data provided in the entity. This is available when
 > > a repository implements the `UpdateById<T>` trait for the entity type `T`
 > > you want to support.
 >
-> 🧩 *Detailed Example:*
+> 🧩 _Detailed Example:_
 >
 > > Old man Ferguson just came back from from the assembly
 > > line pissed off that his widgets are getting messed up in
@@ -86,4 +86,34 @@
 > >
 > > // It's alive! 🧟‍♂️
 > > # });
+> > ```
+>
+> 🧪 _Mock Example:_
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait Updater: Repo + repox::UpdateById<Widget> {}
+> >
+> > let mut repo = MockUpdater::new();
+> > repo.expect_update_by_id::<Widget>()
+> >     .withf(|widget|{
+> >         *widget == Widget { id: 3, name: "DooHickey".into() }
+> >     })
+> >     .returning(repox::mock::ok_val(()));
+> >
+> > # pollster::block_on(async {
+> > repo.update_by_id(Widget { id: 3, name: "DooHickey".into() })
+> >     .await
+> >     .unwrap();
+> > # });
+> >
+> > // Power Overwhelming 👾
 > > ```

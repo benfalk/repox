@@ -44,6 +44,7 @@
 > >
 > > // Define the repository interface for the blog entities
 > >
+> > #[repox::mockall] // <- Testing as a first-class citizen with mockall
 > > pub trait BlogRepo:
 > >     repox::Repo
 > >
@@ -89,6 +90,60 @@
 > >     // realizing this code compiles 🤯
 > >     Ok(())
 > > }
+> >
+> > // Now bear witness to the power of documentation. Behold how we
+> > // can mock out the BlogRepo and test our example usage function
+> > // with nary a line of implementation code written!
+> > let mut blog = MockBlogRepo::new();
+> >
+> > // I personally like to import these helpers, but you do you
+> > use repox::mock::{ok_with, ok_val};
+> >
+> > // an author is born
+> > blog.expect_create_with()
+> >     .returning(ok_with(|params: AuthorParams| {
+> >         Author { id: 1, name: params.name }
+> >     }));
+> >
+> > // their first post... will be created
+> > blog.expect_create_with()
+> >     .returning(ok_with(|params: PostParams| {
+> >         Post {
+> >             id: 1,
+> >             author_id: params.author_id,
+> >             title: params.title,
+> >             content: params.content,
+> >         }
+> >     }));
+> >
+> > // an update will be made to the post, as it was foretold in the example
+> > blog.expect_update_by_id::<Post>()
+> >     .returning(ok_val(()));
+> >
+> > // data will be extracted for verification of the post and author
+> > blog.expect_fetch_with_parent_by_id()
+> >     .returning(ok_with(|id| (
+> >         Post {
+> >             id,
+> >             author_id: 1,
+> >             title: "Scary Post".into(),
+> >             content: "Booooooooooooo!".into(),
+> >         },
+> >         Author {
+> >             id: 1,
+> >             name: "GhostWriter".into(),
+> >         }
+> >     )));
+> >
+> > // in a blind rage of drunken power; a deletion will occur...
+> > blog.expect_delete_by_id::<Post>()
+> >     .returning(ok_val(::repox::DeleteStatus::Deleted));
+> >
+> > // Now all will happen as it was documented, and our example
+> > // usage will be verified by these texts... That's Hawt 🔥
+> > # pollster::block_on(async {
+> > example_usage(&blog).await.expect("Demo to work!");
+> > # });
 > > ```
 
 ---

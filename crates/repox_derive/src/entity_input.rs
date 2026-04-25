@@ -122,6 +122,7 @@ pub enum FieldSelectionStrategy {
 
 impl Parse for EntityInput {
     fn parse(input: ParseStream) -> ::syn::Result<Self> {
+        // TODO: Better error handling
         let input = input.parse::<DeriveInput>()?;
         let name = input.ident.clone();
         let fields = parse_struct_fields(&input)?;

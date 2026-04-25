@@ -10,7 +10,14 @@ use std::hash::Hash;
 #[doc = include_str!("../doc/entity/custom-id.md")]
 #[doc = include_str!("../doc/entity/entity.md")]
 #[doc = include_str!("../doc/entity/has-many.md")]
+#[cfg(feature = "derive")]
 pub use ::repox_derive::Entity;
+
+#[cfg(feature = "mock")]
+pub mod mock;
+
+#[cfg(feature = "mock")]
+pub use ::repox_derive::mockall;
 
 #[doc = include_str!("../doc/repo.md")]
 pub trait Repo: Send + Sync + 'static {
@@ -117,7 +124,7 @@ pub trait Identity {
     fn id(&self) -> Self::ID;
 }
 
-pub trait Entity: Identity + Clone {
+pub trait Entity: Identity + Clone + 'static {
     fn belongs_to_key<T: Entity>(&self) -> T::ID
     where
         Self: BelongsToForeignKey<T>,
@@ -146,7 +153,7 @@ pub trait Entity: Identity + Clone {
         self.has_many_key(entity) == self.id()
     }
 }
-impl<T: Identity + Clone> Entity for T {}
+impl<T: Identity + Clone + 'static> Entity for T {}
 
 // CRUD Traits
 
@@ -218,7 +225,7 @@ pub enum DeleteStatus {
 
 // ----- Create
 
-pub trait Creatable<T: Entity> {}
+pub trait Creatable<T: Entity>: Send + 'static {}
 
 pub trait CreateWith<T: Entity, P: Creatable<T>>: Repo {
     fn exec(

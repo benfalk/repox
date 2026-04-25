@@ -99,3 +99,45 @@
 > > // and fetch_with_children_by_id is our trusty steed! 🐎
 > > # });
 > > ```
+>
+> 🧪 *Mock Example:*
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > #[has_many(Doodad.widget_id)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > pub struct Doodad {
+> >     pub id: u32,
+> >     pub widget_id: u32,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait ChildRepo: Repo + repox::FetchWithChildrenById<Widget, Doodad> {}
+> >
+> > let mut repo = MockChildRepo::new();
+> > repo.expect_fetch_with_children_by_id::<Widget, Doodad>()
+> >     .withf(|id| *id == 42)
+> >     .returning(repox::mock::ok_with(|id: u32| (
+> >         Widget {
+> >             id,
+> >             name: "Sprocket".into(),
+> >         },
+> >         vec![Doodad { id: 1, widget_id: id }],
+> >     )));
+> >
+> > # pollster::block_on(async {
+> > let (widget, doodads) = repo
+> >     .fetch_with_children_by_id::<Widget, Doodad>(42).await.unwrap();
+> > assert_eq!(widget, Widget { id: 42, name: "Sprocket".into() });
+> > assert_eq!(doodads, vec![Doodad { id: 1, widget_id: 42 }]);
+> > # });
+> >
+> > // Take that to the bank! 🏦
+> > ```

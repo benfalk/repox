@@ -80,3 +80,31 @@
 > >
 > > // Wizard! 🧙‍♂️
 > > ```
+>
+> 🧪 *Mock Example:*
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > #[create_params(WidgetParams)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait DeleteRepo: Repo + repox::DeleteById<Widget> {}
+> >
+> > let mut repo = MockDeleteRepo::new();
+> > repo.expect_delete_by_id::<Widget>()
+> >     .withf(|id| *id == 42)
+> >     .returning(repox::mock::ok_val((repox::DeleteStatus::Deleted)));
+> >
+> > # pollster::block_on(async {
+> > let status = repo.delete_by_id::<Widget>(42).await.unwrap();
+> > assert_eq!(status, repox::DeleteStatus::Deleted);
+> > # });
+> >
+> > // We made it! 🏁
+> > ```

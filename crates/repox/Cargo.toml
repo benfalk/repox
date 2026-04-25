@@ -3,9 +3,20 @@ name = "repox"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+default = ["derive"]
+mock = ["dep:mockall", "repox_derive/mock"]
+derive = ["repox_derive"]
+
 [dependencies]
 thiserror.workspace = true
 anyhow.workspace = true
 dashmap.workspace = true
 pollster.workspace = true
-repox_derive = { path = "../repox_derive", version = "0.1.0" }
+
+mockall = { workspace = true, optional = true }
+
+[dependencies.repox_derive]
+path = "../repox_derive"
+optional = true
+version = "0.1.0"

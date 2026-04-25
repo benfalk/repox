@@ -88,3 +88,36 @@
 > > // Sick! 🤘
 > > # });
 > > ```
+>
+> 🧪 *Mock Example:*
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > #[create_params(WidgetParams)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait WidgetCreator: Repo + repox::CreateWith<Widget, WidgetParams> {}
+> >
+> > let params = WidgetParams { name: "RamRod".into() };
+> >
+> > let mut repo = MockWidgetCreator::new();
+> > repo.expect_create_with::<Widget, WidgetParams>()
+> >     .withf(|params| params.name == "RamRod")
+> >     .returning(repox::mock::ok_with(|params: WidgetParams| {
+> >         Widget { id: 42, name: params.name }
+> >     }));
+> >
+> > # pollster::block_on(async {
+> > let widget = repo.create_with(params).await.unwrap();
+> > assert_eq!(widget.name, "RamRod");
+> > assert_eq!(widget.id, 42);
+> > # });
+> >
+> > // It really brings the whole piece together 🫰
+> > ```

@@ -79,3 +79,31 @@
 > > // Legendary! 🪩
 > > # });
 > > ```
+>
+> 🧪 *Mock Example:*
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > #[create_params(WidgetParams)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait MaybeWidget: Repo + repox::FetchById<Widget> {}
+> >
+> > let mut repo = MockMaybeWidget::new();
+> > repo.expect_fetch_by_id_optional::<Widget>()
+> >     .withf(|id| *id == 42)
+> >     .returning(repox::mock::ok_val(None));
+> >
+> > # pollster::block_on(async {
+> > let maybe_widget = repo.fetch_by_id_optional::<Widget>(42).await.unwrap();
+> > assert!(maybe_widget.is_none());
+> > # });
+> >
+> > // Smooth like 🧈
+> > ```

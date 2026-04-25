@@ -181,3 +181,146 @@ impl TokenGenerator<'_, EntityInput> {
         }
     }
 }
+
+#[cfg(feature = "mock")]
+impl TokenGenerator<'_, crate::MockallInput> {
+    /// # Original Trait Definition
+    ///
+    /// This is just a simple method that returns the original trait definition
+    /// that was annotated with `#[repox::mockall]`.  While additional code is
+    /// generated for the mock, the original trait definition is still needed
+    /// and can remain unchanged.
+    ///
+    /// ---
+    pub fn original_trait_def(&self) -> TokenStream {
+        let original_trait_def = &self.input.original_trait_def;
+        quote! { #original_trait_def }
+    }
+
+    /// # Manual Mockall Block
+    ///
+    /// This returns the full `::mockall::mock!` block that is needed to produce
+    /// A fully stubbed mock implementation of the original trait.  This is a bit of
+    /// a brute-force approach, but it allows us to generate a mock that is fully
+    /// compatible with the original trait and all of the various repo traits that
+    /// it may implement, without requiring the user to write any additional code
+    /// or to worry about keeping the plumbing of the mock up to date with the
+    /// original trait definition.
+    ///
+    /// ---
+    pub fn manual_mockall_block(&self) -> TokenStream {
+        let trait_name = &self.input.trait_name;
+
+        quote! {
+            ::mockall::mock! {
+                pub #trait_name {}
+                impl #trait_name for #trait_name {}
+                impl ::repox::mock::StubRepo for #trait_name {}
+                impl ::repox::Repo for #trait_name {
+                    fn delete_by_id<T>(&self,id: T::ID)
+                    -> impl Send + Future<
+                        Output = Result<::repox::DeleteStatus, ::anyhow::Error>
+                    >
+                    where
+                        T: ::repox::Entity,
+                        Self: ::repox::DeleteById<T>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn fetch_by_id<T>(
+                        &self,
+                        id: T::ID,
+                    ) -> impl Send + Future<
+                        Output = Result<T, ::repox::FetchError<T>>
+                    >
+                    where
+                        T: ::repox::Entity,
+                        Self: ::repox::FetchById<T>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn fetch_by_id_optional<T>(
+                        &self,
+                        id: T::ID,
+                    ) -> impl Send + Future<
+                        Output = Result<Option<T>, ::anyhow::Error>
+                    >
+                    where
+                        T: ::repox::Entity,
+                        Self: ::repox::FetchById<T>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn fetch_with_parent_by_id<T, O>(
+                        &self,
+                        id: T::ID,
+                    ) -> impl Send + Future<
+                        Output = Result<(T, O), ::repox::FetchWithParentError<T>>
+                    >
+                    where
+                        T: ::repox::BelongsToForeignKey<O>,
+                        O: ::repox::Entity,
+                        Self: ::repox::FetchWithParentById<T, O>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn fetch_with_children_by_id<T, O>(
+                        &self,
+                        id: T::ID,
+                    ) -> impl Send + Future<
+                        Output = Result<(T, Vec<O>), ::repox::FetchWithChildrenError<T>>
+                    >
+                    where
+                        T: ::repox::HasManyForeignKey<O>,
+                        O: ::repox::Entity,
+                        Self: ::repox::FetchWithChildrenById<T, O>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn create_with<T, P>(
+                        &self,
+                        payload: P,
+                    ) -> impl Send + Future<Output = Result<T, ::anyhow::Error>>
+                    where
+                        T: ::repox::Entity,
+                        P: ::repox::Creatable<T>,
+                        Self: ::repox::CreateWith<T, P>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn update_by_id<T>(
+                        &self,
+                        entity: T,
+                    ) -> impl Send + Future<
+                        Output = Result<(), ::repox::UpdateError<T>>
+                    >
+                    where
+                        T: ::repox::Entity,
+                        Self: ::repox::UpdateById<T>,
+                    {
+                        unreachable!()
+                    }
+
+                    fn insert<T>(
+                        &self,
+                        entity: T,
+                    ) -> impl Send + Future<
+                        Output = Result<(), ::repox::InsertError<T>>
+                    >
+                    where
+                        T: ::repox::Entity,
+                        Self: ::repox::Insert<T>,
+                    {
+                        unreachable!()
+                    }
+                }
+            }
+        }
+    }
+}

@@ -18,13 +18,13 @@
 > > a single fetch operation, reducing the number of queries needed to
 > > retrieve associated entities.
 >
-> 🧩 *Detailed Example:*
+> 🧩 _Detailed Example:_
 >
-> > **Cheese and Crackers!**  It turns out that widgets were supposed to
-> > each belong to certain assemblies.  Nobody at WidgetCo. can remember
+> > **Cheese and Crackers!** It turns out that widgets were supposed to
+> > each belong to certain assemblies. Nobody at WidgetCo. can remember
 > > exactly what these assemblies are, but they know that they we definitely
-> > need them.  The head of their IT refuses to talk to you, and has simply
-> > instructed you to "figure it out".  We don't understand this binary
+> > need them. The head of their IT refuses to talk to you, and has simply
+> > instructed you to "figure it out". We don't understand this binary
 > > format so for now we'll just house it in a `Vec<u8>` and hope for the best.
 > >
 > > ```rust
@@ -114,4 +114,44 @@
 > >
 > > // That's hot 🔥
 > > # });
+> > ```
+>
+> 🧪 _Mock Example:_
+>
+> > ```rust
+> > use repox::{Repo, Entity};
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > pub struct Widget {
+> >     pub id: u32,
+> >     pub name: String,
+> > }
+> >
+> > #[derive(Debug, Clone, PartialEq, Entity)]
+> > #[belongs_to(Widget, widget_id)]
+> > pub struct Doodad {
+> >     pub id: u32,
+> >     pub widget_id: u32,
+> > }
+> >
+> > #[repox::mockall]
+> > pub trait ParentRepo: Repo + repox::FetchWithParentById<Doodad, Widget> {}
+> >
+> > let mut repo = MockParentRepo::new();
+> > repo.expect_fetch_with_parent_by_id::<Doodad, Widget>()
+> >     .withf(|id| *id == 67)
+> >     .returning(repox::mock::ok_with(|id: u32| (
+> >         Doodad { id, widget_id: 18 },
+> >         Widget { id: 18, name: "WindSail".into() },
+> >     )));
+> >
+> >
+> > # pollster::block_on(async {
+> > let (doodad, widget) =
+> >     repo.fetch_with_parent_by_id::<Doodad, Widget>(67).await.unwrap();
+> > assert_eq!(doodad, Doodad { id: 67, widget_id: 18 });
+> > assert_eq!(widget, Widget { id: 18, name: "WindSail".into() });
+> > # });
+> >
+> > // Simply Fantastic ✨
 > > ```
