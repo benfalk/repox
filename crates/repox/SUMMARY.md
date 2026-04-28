@@ -1,10 +1,10 @@
 # SUMMARY
 
-[**`repox`**](./README.md)
+[**`🏠 repox`**](./README.md)
 
 ---
 
-- [**`repox::Repo methods`**](./doc/repo.md)
+- [**`🔎 repox::Repo Interface Methods`**](./doc/repo.md)
   - [**`create_with`**](./doc/repo/create-with.md)
   - [**`delete_by_id`**](./doc/repo/delete-by-id.md)
   - [**`fetch_by_id`**](./doc/repo/fetch-by-id.md)
@@ -16,15 +16,26 @@
 
 ---
 
-- [**`repox::Entity derive tags`**](./doc/entity.md)
-  - [**`#belongs_to`**](./doc/entity/belongs-to.md)
-  - [**`#create_params`**](./doc/entity/create-params.md)
-  - [**`#created_by`**](./doc/entity/created-by.md)
-  - [**`#custom_id`**](./doc/entity/custom-id.md)
-  - [**`#entity`**](./doc/entity/entity.md)
-  - [**`#has_many`**](./doc/entity/has-many.md)
+- [**`🔎 repox::Entity Interface Methods`**](./doc/entity.md)
+  - [**`belongs_to_key`**](./doc/entity/belongs-to-key.md)
+  - [**`belongs_to`**](./doc/entity/belongs-to.md)
+  - [**`has_many_key`**](./doc/entity/has-many-key.md)
+  - [**`is_owner_of`**](./doc/entity/is-owner-of.md)
 
 ---
+
+- [**`🏭 repox::Entity Derive Attributes`**](./doc/entity-derive.md)
+  - [**`#belongs_to`**](./doc/entity-derive/belongs-to.md)
+  - [**`#create_params`**](./doc/entity-derive/create-params.md)
+  - [**`#created_by`**](./doc/entity-derive/created-by.md)
+  - [**`#custom_id`**](./doc/entity-derive/custom-id.md)
+  - [**`#entity`**](./doc/entity-derive/entity.md)
+  - [**`#has_many`**](./doc/entity-derive/has-many.md)
+
+---
+
+- [`🔭 Project Overview`](./doc/project-overview.md)
+
 <!--
 By the documentation, they shall be known.
 With the documentation, they will be used.

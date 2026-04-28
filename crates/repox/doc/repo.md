@@ -1,4 +1,4 @@
-# **`repox::Repo methods`**
+# **`repox::Repo Interface Methods`**
 
 > **Introduction**
 >

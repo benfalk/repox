@@ -1,9 +1,9 @@
-# **`repox::Entity derive tags`**
+# 🔎 repox::Entity Interface Methods
 
 > **Introduction**
 >
-> > `repox::Entity` is both a trait and a derive macro for the `repox`
-> > framework.  The `Entity` trait itself is very simple, requiring only
-> > an `id` method that returns the entity's unique identifier. However,
-> > the `Entity` derive macro provides tags which implement additional
-> > functionality for the entity.
+> > `repox::Entity` is responsible for providing abstract functionality
+> > to data that is stored in a repository. It is a simple trait that
+> > requires an `id` from the identity trait, but it also provides a number
+> > of default methods.  These can aid library maintainers in providing
+> > a consistent interface for different data back-ends.

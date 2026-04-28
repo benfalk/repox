@@ -17,7 +17,6 @@ pub type StructFields = Punctuated<syn::Field, Comma>;
 ///
 /// [derive input]: DeriveInput
 /// ---
-#[derive(Debug)]
 pub struct EntityInput {
     /// Name of the struct for which repox::Entity is derived
     pub name: Ident,
@@ -68,35 +67,30 @@ pub struct EntityInput {
 }
 
 /// Tag for: `#[created_by($creator_type)]`
-#[derive(Debug)]
 pub struct CreatedByTag {
     /// Value for: `#[created_by($creator_type)]`
     pub creator_type: syn::Type,
 }
 
 /// Tag for: `#[belongs_to($target_type, $field_name)]`
-#[derive(Debug)]
 pub struct BelongsToTag {
     pub target_type: syn::Type,
     pub field_name: Ident,
 }
 
 /// Tag for: `#[has_many($target_type.$field_name)]`
-#[derive(Debug)]
 pub struct HasManyTag {
     pub target_type: syn::Type,
     pub field_name: Ident,
 }
 
 /// Tag for: `#[create_params($params_type, $field_selection_strategy)]`
-#[derive(Debug)]
 pub struct CreateParamsTag {
     pub struct_name: Ident,
     pub selector: FieldSelectionStrategy,
 }
 
 /// Tag for: `#[custom_id($id_type, $func_path)]`
-#[derive(Debug)]
 pub struct CustomIdTag {
     pub id_type: syn::Type,
     pub func_path: syn::Path,
@@ -105,7 +99,6 @@ pub struct CustomIdTag {
 /// Determines fields to use from the Entity struct when
 /// it needs to use some potentially reduced set of fields
 /// for a generated struct (e.g. the create params struct).
-#[derive(Debug)]
 pub enum FieldSelectionStrategy {
     /// Takes all fields from the Entity ( including the ID field )
     All,

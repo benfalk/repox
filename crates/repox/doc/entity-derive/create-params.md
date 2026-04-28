@@ -101,7 +101,7 @@
 > > }
 > >
 > > // All of the fields are included
-> > let post = Post { id: 100, author_id: 1, data: "Hello World".into() };
+> > let post = PostParams { id: 100, author_id: 1, data: "Hello World".into() };
 > > ```
 
 ## **`excluding(...)`**

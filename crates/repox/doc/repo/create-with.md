@@ -11,9 +11,6 @@
 > > This is particularly useful when the creation of an entity requires
 > > additional information that is not part of the entity itself,
 > > such as auto-generated IDs or timestamps.
-> >
-> > **TODO:** briefly explain the quick ways to tag and define these
-> > parameter structs with the derive macro attributes.
 >
 > 🧩 *Detailed Example:*
 >
