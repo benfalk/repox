@@ -2,6 +2,7 @@
 name = "showtime"
 version = "0.1.0"
 edition = "2024"
+publish = false # Demo only, not intended for distribution
 
 [dependencies]
 repox = { path = "../repox", features = ["derive", "mock"] }

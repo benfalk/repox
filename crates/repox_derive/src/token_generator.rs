@@ -1,4 +1,3 @@
-use super::EntityInput;
 use ::proc_macro2::TokenStream;
 use ::quote::quote;
 
@@ -22,9 +21,10 @@ impl<'a, T> TokenGenerator<'a, T> {
     }
 }
 
-impl TokenGenerator<'_, EntityInput> {
+impl TokenGenerator<'_, crate::EntityInput> {
     /// Creates n `repox::Identity` impl for the entity if one of the
-    /// following scenarios is true:
+    /// following scenarios is true.  This also will implement the Entity
+    /// trait.
     ///
     /// - `#[custom_id($id_type, $func_path)]`
     /// - `#[entity(id)]`
@@ -46,6 +46,7 @@ impl TokenGenerator<'_, EntityInput> {
                         #func(self)
                     }
                 }
+                impl ::repox::Entity for #name {}
             };
         };
 
@@ -62,6 +63,7 @@ impl TokenGenerator<'_, EntityInput> {
                     self.#id_field_ident
                 }
             }
+            impl ::repox::Entity for #name {}
         }
     }
 

@@ -153,7 +153,6 @@ pub trait Entity: Identity + Clone + 'static {
         self.has_many_key(entity) == self.id()
     }
 }
-impl<T: Identity + Clone + 'static> Entity for T {}
 
 // CRUD Traits
 

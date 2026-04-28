@@ -7,18 +7,16 @@
 > >
 > > - Provide application developers simple traits that describe what kind
 > >   data access interface they need between entities and a repository.
-> >
 > > - Supply tooling to make implementing and defining repositories and entities
 > >   much easier by removing a lot of needless boilerplate.
-> >
 > > - Maintain thorough, high-quality, documentation to lower the cognitive
 > >   load on needing to remember constantly how to use features of this crate.
 
 ## Simple Blog Example
 
-> Let's say you want to model blog posts for authors.  Here is a simple example
+> Let's say you want to model blog posts for authors. Here is a simple example
 > of how you might use `repox::` to define your entities and repository
-> interface for your application.  This example demonstrates how to use the
+> interface for your application. This example demonstrates how to use the
 > various traits and how they are used.
 >
 > > ```rust
@@ -140,7 +138,7 @@
 > >     .returning(ok_val(::repox::DeleteStatus::Deleted));
 > >
 > > // Now all will happen as it was documented, and our example
-> > // usage will be verified by these texts... That's Hawt 🔥
+> > // usage will be verified by these tests... That's Hawt 🔥
 > > # pollster::block_on(async {
 > > example_usage(&blog).await.expect("Demo to work!");
 > > # });
@@ -148,8 +146,8 @@
 
 ---
 
-> *Documentation Prayer*
-> >
+> _Documentation Prayer_
+>
 > > ```text
 > > By the documentation, they shall be known.
 > > With the documentation, they will be used.

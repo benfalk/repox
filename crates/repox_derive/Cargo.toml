@@ -2,6 +2,12 @@
 name = "repox_derive"
 version = "0.1.0"
 edition = "2024"
+authors = ["Ben Falk <benjamin.falk@yahoo.com>"]
+description = "trait framework for data repository patterns"
+repository = "https://benfalk.github.io/repox/"
+license = "MIT"
+keywords = ["repository", "data-access", "framework"]
+categories = ["database-implementations", "database"]
 
 [lib]
 proc-macro = true
